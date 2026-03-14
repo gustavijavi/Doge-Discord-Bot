@@ -17,6 +17,7 @@ bot = commands.Bot(command_prefix='d!', intents=intents)
 # set up your own user id in the env file in case you want the bot to @ you specifically at certain points
 my_user_id = int(os.getenv('USER_ID'))
 
+
 @bot.event
 async def on_ready():
     print(f"{bot.user.name}, is ready to chud it out")
@@ -25,6 +26,7 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     await member.send(f"Welcome to the server chud, {member.name}")
+
 
 @bot.event
 async def on_message(message):
@@ -43,9 +45,11 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+
 @bot.command()
 async def ping(ctx):
     await ctx.send(f"pong {ctx.author.mention}")
+
 
 @bot.command()
 async def assign(ctx):
@@ -70,5 +74,42 @@ async def unassign(ctx):
     #   await ctx.send("Role doesn't exist")
     
     return
+
+
+@bot.command()
+async def dm(ctx, *, msg):
+    await ctx.author.send(f"you wanted me to send you: {msg}")
+
+
+bot.command()
+async def reply(ctx):
+    await ctx.reply("this is a reply twin")
+
+
+bot.command()
+async def poll(ctx, *, question):
+    embed = discord.Embed(title="New Poll", description=question)
+    poll_message = await ctx.send(embed=embed)
+    await poll_message.add_reaction("❤️")
+    await poll_message.add_reaction("🧡")
+    await poll_message.add_reaction("💚")
+    await poll_message.add_reaction("💙")
+
+
+@bot.command()
+#@commands.has_role(secret_role)
+async def secret(ctx):
+    # await ctx.send("You have the secret role woahg")
+    
+    return
+
+# @secret.error
+async def secret_error(ctx, error):
+    # if isinstance(error, commands.MissingRole):
+    #     await ctx.send("You don't have permission for dat twin")
+    
+    return
+
+
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
