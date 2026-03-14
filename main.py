@@ -81,12 +81,12 @@ async def dm(ctx, *, msg):
     await ctx.author.send(f"you wanted me to send you: {msg}")
 
 
-bot.command()
+@bot.command()
 async def reply(ctx):
     await ctx.reply("this is a reply twin")
 
 
-bot.command()
+@bot.command()
 async def poll(ctx, *, question):
     embed = discord.Embed(title="New Poll", description=question)
     poll_message = await ctx.send(embed=embed)
