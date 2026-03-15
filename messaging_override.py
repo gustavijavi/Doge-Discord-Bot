@@ -30,11 +30,11 @@ async def on_ready():
         await client.close()
 
 
-    print(f"-- Messaging Override Activated --\n")
+    print(f"\n-- Messaging Override Activated --")
 
     # Go through until script is exited
     while True:
-        inputStr = await async_input(f"What would you like to do? (message/impersonate/stop): ")
+        inputStr = await async_input(f"\nWhat would you like to do? (message/impersonate/stop): ")
 
         if inputStr.lower() == "message":
 
@@ -47,7 +47,7 @@ async def on_ready():
                         channel = client.get_channel(int(channelId))
                         print(f"{channel.guild.name} - #{channel.name}: {channelId}")
 
-                inputStr = await async_input(f"Please input the channel ID you would like to send messages into (id/cancel): ")
+                inputStr = await async_input(f"\nPlease input the channel ID you would like to send messages into (id/cancel): ")
 
                 channelId = 0
 
@@ -130,7 +130,7 @@ async def on_ready():
                             if shouldExit:
                                 await client.close()
                         else:
-                            print(f"Could not find member by the username inputted, try again\n")
+                            print(f"Could not find member by the username inputted, try again")
 
                     break
                 elif inputStr == "cancel":
