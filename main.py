@@ -76,8 +76,8 @@ async def ping(ctx):
 @bot.command()
 async def impersonateTest(ctx):
     embed = discord.Embed(description = "test")
-    embed.set_author(name=ctx.member.display_name, icon_url=ctx.member.avatar.url)
-    await ctx.send(embed=embed)
+    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar.url)
+    await ctx.channel.send(embed=embed)
 
 
 @bot.command()
