@@ -43,7 +43,7 @@ async def on_ready():
             while True:
 
                 for serverId in data['registered_message_channels']:
-                    for channelId in data['registered_message_channels']:
+                    for channelId in data['registered_message_channels'][serverId]:
                         channel = client.get_channel(int(channelId))
                         print(f"{channel.guild.name} - #{channel.name}: {channelId}")
 
@@ -80,7 +80,7 @@ async def on_ready():
             while True:
 
                 for serverId in data['registered_message_channels']:
-                    for channelId in data['registered_message_channels']:
+                    for channelId in data['registered_message_channels'][serverId]:
                         channel = client.get_channel(int(channelId))
                         print(f"{channel.guild.name} - #{channel.name}: {channelId}")
 
