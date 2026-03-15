@@ -33,15 +33,18 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    message_to_me = f"I'll... I'll spread the word\nWE PLAYIN <@{my_user_id}>!!!!!!"
+    message_to_me_one = "I'll... I'll spread the word"
+    message_to_me_two = f"HOP ONNNNNN <@{my_user_id}>!!!!!!"
     
-    if "play" in message.content.lower() and "league" in message.content.lower() and message.author.id != my_user_id:
+    if ("play" in message.content.lower() or "hop on" in message.content.lower() or "hoppin" in message.content.lower()) and "league" in message.content.lower() and message.author.id != my_user_id:
         await message.channel.send(f"DID SOMEBODY SAY LEAGUE???")
-        await message.channel.send(message_to_me)
+        await message.channel.send(message_to_me_one)
+        await message.channel.send(message_to_me_two)
 
-    if "play" in message.content.lower() and "roblox" in message.content.lower() and message.author.id != my_user_id:
+    if ("play" in message.content.lower() or "hop on" in message.content.lower() or "hoppin" in message.content.lower()) and "roblox" in message.content.lower() and message.author.id != my_user_id:
         await message.channel.send(f"DID SOMEBODY SAY BOBLOX???")
-        await message.channel.send(message_to_me)
+        await message.channel.send(message_to_me_one)
+        await message.channel.send(message_to_me_two)
 
     await bot.process_commands(message)
 
