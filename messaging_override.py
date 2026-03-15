@@ -88,7 +88,7 @@ async def on_ready():
 
                     while True:
 
-                        inputStr = await async_input(f"Who would you like to impersonate? (username/cancel): ")
+                        inputStr = await async_input(f"\nWho would you like to impersonate? (username/cancel): ")
 
                         member = discord.utils.get(channel.guild.members, name=inputStr)
 
@@ -99,18 +99,25 @@ async def on_ready():
 
                             avatar = member.display_avatar.with_format('png').url
 
-                            print(f"\nYou may now start chatting! Enter 'stop' to exit the program")
+                            print(f"\nYou may now start chatting! Enter 'change' to change username or 'stop' to exit the program")
+
+                            shouldExit = False
 
                             try:
                                 while True:
                                     inputStr = await async_input()
 
-                                    if inputStr == "stop":
+                                    if inputStr == "change":
+                                        break
+                                    elif inputStr == "stop":
+                                        shouldExit = True
                                         break
                                     else:
                                         await webhook.send(inputStr, username=member.display_name, avatar_url=avatar)
                             finally:
                                 await webhook.delete()
+
+                            if shouldExit:
                                 await client.close()
                         else:
                             print(f"Could not find member by the username inputted, try again\n")
