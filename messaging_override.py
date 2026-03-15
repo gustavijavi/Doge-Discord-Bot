@@ -42,6 +42,11 @@ async def on_ready():
 
             while True:
 
+                for serverId in data['registered_message_channels']:
+                    for channelId in data['registered_message_channels']:
+                        channel = client.get_channel(int(channelId))
+                        print(f"{channel.guild.name} - #{channel.name}: {channelId}")
+
                 inputStr = await async_input(f"Please input the channel ID you would like to send messages into (id/cancel): ")
 
                 channelId = 0
@@ -74,7 +79,12 @@ async def on_ready():
 
             while True:
 
-                inputStr = await async_input(f"Please input the channel ID you would like to send messages into (id/cancel): ")
+                for serverId in data['registered_message_channels']:
+                    for channelId in data['registered_message_channels']:
+                        channel = client.get_channel(int(channelId))
+                        print(f"{channel.guild.name} - #{channel.name}: {channelId}")
+
+                inputStr = await async_input(f"\nPlease input the channel ID you would like to send messages into (id/cancel): ")
 
                 channelId = 0
 
