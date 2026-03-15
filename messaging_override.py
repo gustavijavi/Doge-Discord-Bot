@@ -38,7 +38,7 @@ async def on_ready():
 
         if inputStr.lower() == "message":
 
-            print(f"-- Normal Messaging Override Activated --")
+            print(f"\n-- Normal Messaging Override Activated --\n")
 
             while True:
 
@@ -54,7 +54,7 @@ async def on_ready():
 
                     channel = client.get_channel(channelId)
 
-                    print("You may now start chatting! Enter 'stop' to exit the program\n")
+                    print("\nYou may now start chatting! Enter 'stop' to exit the program")
 
                     while True:
                         inputStr = await async_input()
@@ -69,6 +69,9 @@ async def on_ready():
                     print(f"Not a valid option, try again\n")
 
         elif inputStr.lower() == "impersonate":
+
+            print(f"\n-- Impersonation Mode Activated --\n")
+
             while True:
 
                 inputStr = await async_input(f"Please input the channel ID you would like to send messages into (id/cancel): ")
@@ -96,7 +99,7 @@ async def on_ready():
 
                             avatar = member.display_avatar.with_format('png').url
 
-                            print(f"You may now start chatting! Enter 'stop' to exit the program\n")
+                            print(f"\nYou may now start chatting! Enter 'stop' to exit the program")
 
                             try:
                                 while True:
@@ -109,7 +112,7 @@ async def on_ready():
                             finally:
                                 await webhook.delete()
                         else:
-                            print(f"Could not find user by the username inputted, try again\n")
+                            print(f"Could not find member by the username inputted, try again\n")
 
                     break
                 elif inputStr == "cancel":
