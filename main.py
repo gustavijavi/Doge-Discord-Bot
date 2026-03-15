@@ -3,6 +3,7 @@ from discord.ext import commands
 import logging
 from dotenv import load_dotenv
 import os
+import asyncio
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -33,25 +34,31 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
+    channel = message.channel
+
     message_to_me_one = "I'll... I'll spread the word"
     message_to_me_two = f"HOP ONNNNNN <@{my_user_id}>!!!!!!"
     
     if ("play" in message.content.lower() or "hop on" in message.content.lower() or "hoppin" in message.content.lower()) and "league" in message.content.lower() and message.author.id != my_user_id:
-        await message.channel.send(f"DID SOMEBODY SAY LEAGUE???")
-        await message.channel.send(message_to_me_one)
-        await message.channel.send(message_to_me_two)
+        await channel.send(f"DID SOMEBODY SAY LEAGUE???")
+        await asyncio.sleep(0.5)
+        await channel.send(message_to_me_one)
+        await asyncio.sleep(0.5)
+        await channel.send(message_to_me_two)
 
     if ("play" in message.content.lower() or "hop on" in message.content.lower() or "hoppin" in message.content.lower()) and "roblox" in message.content.lower() and message.author.id != my_user_id:
-        await message.channel.send(f"DID SOMEBODY SAY BOBLOX???")
-        await message.channel.send(message_to_me_one)
-        await message.channel.send(message_to_me_two)
+        await channel.send(f"DID SOMEBODY SAY BOBLOX???")
+        await asyncio.sleep(0.5)
+        await channel.send(message_to_me_one)
+        await asyncio.sleep(0.5)
+        await channel.send(message_to_me_two)
 
     await bot.process_commands(message)
 
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send(f"pong")
+    await ctx.send("pong")
 
 
 @bot.command()
