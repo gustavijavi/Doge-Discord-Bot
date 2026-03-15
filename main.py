@@ -48,7 +48,7 @@ async def on_message(message):
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send(f"pong {ctx.author.mention}")
+    await ctx.send(f"pong")
 
 
 @bot.command()
