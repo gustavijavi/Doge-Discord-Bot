@@ -77,10 +77,7 @@ async def ping(ctx):
 async def impersonateTest(ctx):
     webhook = await ctx.channel.create_webhook(name=ctx.author.display_name)
 
-    if ctx.author.display_avatar.is_animated():
-        avatar = ctx.author.display_avatar.with_size(128).url
-    else:
-        avatar = ctx.author.display_avatar.url
+    avatar = ctx.author.display_avatar.with_format('png').url
 
     await webhook.send("Testing", username=ctx.author.display_name, avatar_url=avatar)
 
