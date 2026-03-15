@@ -74,6 +74,13 @@ async def ping(ctx):
 
 
 @bot.command()
+async def impersonateTest(ctx):
+    embed = discord.Embed(description = "test")
+    embed.set_author(name=ctx.member.display_name, icon_url=ctx.member.avatar.url)
+    await ctx.send(embed=embed)
+
+
+@bot.command()
 async def assign(ctx):
     # can be used to assign roles later on
     # role = discord.utils.get(ctx.guild.roles, name="whatevarole")
@@ -184,6 +191,8 @@ async def poll(ctx, *, question):
     await poll_message.add_reaction("💚")
     await poll_message.add_reaction("💙")
 '''
+
+
 # Helper Functions
 async def notInServer(ctx):
     if ctx.guild is None:
