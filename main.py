@@ -4,6 +4,7 @@ import logging
 from dotenv import load_dotenv
 import os
 import asyncio
+import json
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -21,6 +22,17 @@ my_user_id = int(os.getenv('USER_ID'))
 
 @bot.event
 async def on_ready():
+    if not os.path.exists('data.json'):
+        data = {
+            "registered_message_channels": {},
+            "registered_clip_channels": {},
+            "registered_users": {},
+            "settings": {}
+        }
+        
+        with open('data.json', 'w') as f:
+            json.dump(data, f, indent=4)
+    
     print(f"{bot.user.name}, is ready to chud it out")
 
 
@@ -87,23 +99,101 @@ async def unassign(ctx):
 
 
 @bot.command()
-async def dm(ctx, *, msg):
-    await ctx.author.send(f"you wanted me to send you: {msg}")
+async def registerMessaging(ctx):
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    serverId = str(ctx.guild.id)
+    channelId = str(ctx.channel.id)
+
+    if serverId not in data['registered_message_channels']:
+        data['registered_message_channels'][serverId] = []
+
+    if channelId in data['registered_message_channels'][serverId]:
+        await ctx.send(f"Channel has already been registered")
+        return
+
+    data['registered_message_channels'][serverId].append(channelId)
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+    
+    await ctx.send(f"Registered this channel for message override")
 
 
 @bot.command()
-async def reply(ctx):
-    await ctx.reply("this is a reply twin")
+async def unregisterMessaging(ctx):
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    serverId = str(ctx.guild.id)
+    channelId = str(ctx.channel.id)
+
+    if serverId not in data['registered_message_channels']:
+        await ctx.send("This channel has not been registered")
+        return
+    elif channelId not in data['registered_message_channels'][serverId]:
+        await ctx.send("This channel has not been registered")
+        return
+    
+    data['registered_message_channels'][serverId].remove(channelId)
+
+    if data['registered_message_channels'][serverId] == []:
+        del data['registered_message_channels'][serverId]
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+    
+    await ctx.send(f"Unregistered this channel for message override")
 
 
 @bot.command()
-async def poll(ctx, *, question):
-    embed = discord.Embed(title="New Poll", description=question)
-    poll_message = await ctx.send(embed=embed)
-    await poll_message.add_reaction("❤️")
-    await poll_message.add_reaction("🧡")
-    await poll_message.add_reaction("💚")
-    await poll_message.add_reaction("💙")
+async def registerClips(ctx):
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    serverId = str(ctx.guild.id)
+    channelId = str(ctx.channel.id)
+
+    if serverId not in data['registered_clip_channels']:
+        data['registered_clip_channels'][serverId] = []
+
+    if channelId in data['registered_clip_channels'][serverId]:
+        await ctx.send(f"Channel has already been registered")
+        return
+
+    data['registered_clip_channels'][serverId].append(channelId)
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+    
+    await ctx.send(f"Registered this channel for sending clips")
+
+
+@bot.command()
+async def unregisterClips(ctx):
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    serverId = str(ctx.guild.id)
+    channelId = str(ctx.channel.id)
+
+    if serverId not in data['registered_clip_channels']:
+        await ctx.send("This channel has not been registered")
+        return
+    elif channelId not in data['registered_clip_channels'][serverId]:
+        await ctx.send("This channel has not been registered")
+        return
+    
+    data['registered_clip_channels'][serverId].remove(channelId)
+
+    if data['registered_clip_channels'][serverId] == []:
+        del data['registered_clip_channels'][serverId]
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+    
+    await ctx.send(f"Unregistered this channel for sending clips")
 
 
 @bot.command()
@@ -120,6 +210,31 @@ async def secret_error(ctx, error):
     
     return
 
+
+'''
+@bot.command()
+async def dm(ctx, *, msg):
+    await ctx.author.send(f"you wanted me to send you: {msg}")
+'''
+
+
+'''
+@bot.command()
+async def reply(ctx):
+    await ctx.reply("this is a reply twin")
+'''
+
+
+'''
+@bot.command()
+async def poll(ctx, *, question):
+    embed = discord.Embed(title="New Poll", description=question)
+    poll_message = await ctx.send(embed=embed)
+    await poll_message.add_reaction("❤️")
+    await poll_message.add_reaction("🧡")
+    await poll_message.add_reaction("💚")
+    await poll_message.add_reaction("💙")
+'''
 
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
