@@ -27,7 +27,7 @@ async def on_ready():
     # if there are no registered messaging servers, 
     if not data['registered_message_channels']:
         print(f"No possible servers to message into\nPlease register your server/channel you'd like the bot to talk in with d!registerMessaging")
-        exit()
+        await client.close()
 
 
     print(f"-- Messaging Override Activated --\n")
@@ -59,7 +59,7 @@ async def on_ready():
                     while True:
                         inputStr = await async_input()
                         if inputStr == "stop":
-                            exit()
+                            await client.close()
                         else:
                             await channel.send(inputStr)
 
@@ -111,6 +111,7 @@ async def on_ready():
                                         await webhook.send(inputStr, username=member.display_name, avatar_url=avatar)
                             finally:
                                 await webhook.delete()
+                                await client.close()
                         else:
                             print(f"Could not find member by the username inputted, try again\n")
 
@@ -121,7 +122,7 @@ async def on_ready():
                     print(f"Not a valid option, try again\n")
 
         elif inputStr == "stop":
-            break
+            await client.close()
         else:
             print(f"Not a valid option, try again\n")
 
