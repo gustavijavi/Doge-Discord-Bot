@@ -74,17 +74,6 @@ async def ping(ctx):
 
 
 @bot.command()
-async def impersonateTest(ctx):
-    webhook = await ctx.channel.create_webhook(name=ctx.author.display_name)
-
-    avatar = ctx.author.display_avatar.with_format('png').url
-
-    await webhook.send("Testing", username=ctx.author.display_name, avatar_url=avatar)
-
-    await webhook.delete()
-
-
-@bot.command()
 async def assign(ctx):
     # can be used to assign roles later on
     # role = discord.utils.get(ctx.guild.roles, name="whatevarole")
