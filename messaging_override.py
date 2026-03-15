@@ -25,7 +25,7 @@ async def on_ready():
         data = json.load(f)
 
     # if there are no registered messaging servers, 
-    if not data['registered_messaging_channels']:
+    if not data['registered_message_channels']:
         print(f"No possible servers to message into\nPlease register your server/channel you'd like the bot to talk in with d!registerMessaging")
         exit()
 
@@ -46,8 +46,8 @@ async def on_ready():
 
                 channelId = 0
 
-                for serverId in data['registered_messaging_channels']:
-                    if inputStr in data['registered_messaging_channels'][serverId]:
+                for serverId in data['registered_message_channels']:
+                    if inputStr in data['registered_message_channels'][serverId]:
                         channelId = int(inputStr)
 
                 if channelId != 0:
@@ -75,8 +75,8 @@ async def on_ready():
 
                 channelId = 0
 
-                for serverId in data['registered_messaging_channels']:
-                    if inputStr in data['registered_messaging_channels'][serverId]:
+                for serverId in data['registered_message_channels']:
+                    if inputStr in data['registered_message_channels'][serverId]:
                         channelId = int(inputStr)
 
                 if channelId != 0:
