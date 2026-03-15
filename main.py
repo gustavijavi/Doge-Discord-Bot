@@ -39,7 +39,7 @@ async def on_message(message):
     message_to_me_one = "I'll... I'll spread the word"
     message_to_me_two = f"HOP ONNNNNN <@{my_user_id}>!!!!!!"
     
-    if ("play" in message.content.lower() or "hop on" in message.content.lower() or "hoppin" in message.content.lower()) and "league" in message.content.lower() and message.author.id != my_user_id:
+    if ("play" in message.content.lower() or "hop on" in message.content.lower() or "hoppin" in message.content.lower()) and "league" in message.content.lower():
         await channel.send(f"DID SOMEBODY SAY LEAGUE???")
         await asyncio.sleep(0.5)
         await channel.send(message_to_me_one)
