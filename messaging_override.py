@@ -29,16 +29,21 @@ async def on_ready():
         print(f"No possible servers to message into\nPlease register your server/channel you'd like the bot to talk in with d!registerMessaging")
         await client.close()
 
-
     print(f"\n-- Messaging Override Activated --")
+
+    await asyncio.sleep(1)
 
     # Go through until script is exited
     while True:
         inputStr = await async_input(f"\nWhat would you like to do? (message/impersonate/stop): ")
 
+        await asyncio.sleep(1)
+
         if inputStr.lower() == "message":
 
             print(f"\n-- Normal Messaging Override Activated --\n")
+
+            await asyncio.sleep(1)
 
             while True:
 
@@ -48,6 +53,8 @@ async def on_ready():
                         print(f"{channel.guild.name} - #{channel.name}: {channelId}")
 
                 inputStr = await async_input(f"\nPlease input the channel ID you would like to send messages into (id/cancel): ")
+
+                await asyncio.sleep(1)
 
                 channelId = 0
 
@@ -69,13 +76,17 @@ async def on_ready():
                             await channel.send(inputStr)
 
                 elif inputStr == "cancel":
+                    await asyncio.sleep(1)
                     break
                 else:
                     print(f"Not a valid option, try again\n")
+                    await asyncio.sleep(1)
 
         elif inputStr.lower() == "impersonate":
 
             print(f"\n-- Impersonation Mode Activated --\n")
+
+            await asyncio.sleep(1)
 
             while True:
 
@@ -85,6 +96,8 @@ async def on_ready():
                         print(f"{channel.guild.name} - #{channel.name}: {channelId}")
 
                 inputStr = await async_input(f"\nPlease input the channel ID you would like to send messages into (id/cancel): ")
+
+                await asyncio.sleep(1)
 
                 channelId = 0
 
@@ -99,6 +112,8 @@ async def on_ready():
                     while True:
 
                         inputStr = await async_input(f"\nWho would you like to impersonate? (username/cancel): ")
+
+                        await asyncio.sleep(1)
 
                         member = discord.utils.get(channel.guild.members, name=inputStr)
 
@@ -131,17 +146,20 @@ async def on_ready():
                                 await client.close()
                         else:
                             print(f"Could not find member by the username inputted, try again")
+                            await asyncio.sleep(1)
 
                     break
                 elif inputStr == "cancel":
                     break
                 else:
                     print(f"Not a valid option, try again\n")
+                    await asyncio.sleep(1)
 
         elif inputStr == "stop":
             await client.close()
         else:
             print(f"Not a valid option, try again\n")
+            await asyncio.sleep(1)
 
 
 client.run(token)
