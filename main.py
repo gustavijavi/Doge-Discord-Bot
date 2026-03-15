@@ -100,98 +100,47 @@ async def unassign(ctx):
 
 @bot.command()
 async def registerMessaging(ctx):
-    with open('data.json', 'r') as f:
-        data = json.load(f)
-
-    serverId = str(ctx.guild.id)
-    channelId = str(ctx.channel.id)
-
-    if serverId not in data['registered_message_channels']:
-        data['registered_message_channels'][serverId] = []
-
-    if channelId in data['registered_message_channels'][serverId]:
-        await ctx.send(f"Channel has already been registered")
+    
+    if await notInServer(ctx):
         return
 
-    data['registered_message_channels'][serverId].append(channelId)
-
-    with open('data.json', 'w') as f:
-        json.dump(data, f, indent=4)
+    await registerChannel(ctx, 'registered_message_channels')
     
     await ctx.send(f"Registered this channel for message override")
 
 
 @bot.command()
 async def unregisterMessaging(ctx):
-    with open('data.json', 'r') as f:
-        data = json.load(f)
 
-    serverId = str(ctx.guild.id)
-    channelId = str(ctx.channel.id)
-
-    if serverId not in data['registered_message_channels']:
-        await ctx.send("This channel has not been registered")
+    if await notInServer(ctx):
         return
-    elif channelId not in data['registered_message_channels'][serverId]:
-        await ctx.send("This channel has not been registered")
-        return
-    
-    data['registered_message_channels'][serverId].remove(channelId)
 
-    if data['registered_message_channels'][serverId] == []:
-        del data['registered_message_channels'][serverId]
-
-    with open('data.json', 'w') as f:
-        json.dump(data, f, indent=4)
+    await unregisterChannel(ctx, 'registered_message_channels')
     
     await ctx.send(f"Unregistered this channel for message override")
 
 
 @bot.command()
 async def registerClips(ctx):
+
+    if await notInServer(ctx):
+        return
+
     with open('data.json', 'r') as f:
         data = json.load(f)
 
-    serverId = str(ctx.guild.id)
-    channelId = str(ctx.channel.id)
-
-    if serverId not in data['registered_clip_channels']:
-        data['registered_clip_channels'][serverId] = []
-
-    if channelId in data['registered_clip_channels'][serverId]:
-        await ctx.send(f"Channel has already been registered")
-        return
-
-    data['registered_clip_channels'][serverId].append(channelId)
-
-    with open('data.json', 'w') as f:
-        json.dump(data, f, indent=4)
+    await registerChannel(ctx, 'registered_clip_channels')
     
     await ctx.send(f"Registered this channel for sending clips")
 
 
 @bot.command()
 async def unregisterClips(ctx):
-    with open('data.json', 'r') as f:
-        data = json.load(f)
 
-    serverId = str(ctx.guild.id)
-    channelId = str(ctx.channel.id)
-
-    if serverId not in data['registered_clip_channels']:
-        await ctx.send("This channel has not been registered")
+    if await notInServer(ctx):
         return
-    elif channelId not in data['registered_clip_channels'][serverId]:
-        await ctx.send("This channel has not been registered")
-        return
-    
-    data['registered_clip_channels'][serverId].remove(channelId)
 
-    if data['registered_clip_channels'][serverId] == []:
-        del data['registered_clip_channels'][serverId]
-
-    with open('data.json', 'w') as f:
-        json.dump(data, f, indent=4)
+    await unregisterChannel(ctx, 'registered_clip_channels')
     
     await ctx.send(f"Unregistered this channel for sending clips")
 
@@ -235,6 +184,54 @@ async def poll(ctx, *, question):
     await poll_message.add_reaction("💚")
     await poll_message.add_reaction("💙")
 '''
+# Helper Functions
+async def notInServer(ctx):
+    if ctx.guild is None:
+        await ctx.send("This command can only be used in a server")
+        return True
+    return False
+
+async def registerChannel(ctx, channelType):
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    serverId = str(ctx.guild.id)
+    channelId = str(ctx.channel.id)
+
+    if serverId not in data[channelType]:
+        data[channelType][serverId] = []
+
+    if channelId in data[channelType][serverId]:
+        await ctx.send(f"Channel has already been registered")
+        return
+
+    data[channelType][serverId].append(channelId)
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+
+
+async def unregisterChannel(ctx, channelType):
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    serverId = str(ctx.guild.id)
+    channelId = str(ctx.channel.id)
+
+    if serverId not in data[channelType]:
+        await ctx.send("This channel has not been registered")
+        return
+    elif channelId not in data[channelType][serverId]:
+        await ctx.send("This channel has not been registered")
+        return
+    
+    data[channelType][serverId].remove(channelId)
+
+    if data[channelType][serverId] == []:
+        del data[channelType][serverId]
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
