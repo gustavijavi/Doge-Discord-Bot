@@ -153,7 +153,7 @@ async def register(ctx, *, msg):
     user = medalApi.get_user(msg)
 
     if user == []:
-        await ctx.send(f"Medal user not found")
+        await ctx.send(f"Medal user not found blud")
         return
     
     userId = user[0]['userId']
@@ -162,7 +162,7 @@ async def register(ctx, *, msg):
         data = json.load(f)
 
     if msg in data['registered_users']:
-        await ctx.send(f"This Medal user has already been registered")
+        await ctx.send(f"This Medal user has already been registered blud")
         return
     
     data['registered_users'][msg] = []
@@ -173,7 +173,7 @@ async def register(ctx, *, msg):
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4)
 
-    await ctx.send(f"{msg} has been registered!")
+    await ctx.send(f"{msg} has been registered twin")
 
 @bot.command()
 async def unregister(ctx, *, msg):
@@ -181,10 +181,7 @@ async def unregister(ctx, *, msg):
         data = json.load(f)
 
     if msg not in data['registered_users']:
-        await ctx.send(f"Medal user has not been registered yet")
-
-    if msg in data['registered_users']:
-        await ctx.send(f"This username has already been registered")
+        await ctx.send(f"Medal user has not been registered yet blud")
         return
     
     del data['registered_users'][msg]
@@ -192,7 +189,7 @@ async def unregister(ctx, *, msg):
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4)
 
-    await ctx.send(f"{msg} has been unregistered")
+    await ctx.send(f"{msg} has been unregistered twin")
 
 
 
