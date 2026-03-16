@@ -156,7 +156,7 @@ async def register(ctx, *, msg):
         await ctx.send(f"Username not found on Medal")
         return
     
-    userId = user['userId']
+    userId = user[0]['userId']
 
     with open('data.json', 'r') as f:
         data = json.load(f)
