@@ -42,7 +42,7 @@ async def on_ready():
 
     await bot.change_presence(activity=discord.CustomActivity(name="wait, im coded ( ͡° ͜ʖ ͡°)"))
 
-    checkMedal()
+    await checkMedal()
     
     print(f"{bot.user.name}, is ready to chud it out")
 
