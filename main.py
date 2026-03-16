@@ -33,7 +33,7 @@ async def on_ready():
         with open('data.json', 'w') as f:
             json.dump(data, f, indent=4)
 
-    await bot.change_presence(activity=discord.CustomActivity(name="wait, im coded ( ͡° ͜ʖ ͡°)", emoji="👾"))
+    await bot.change_presence(activity=discord.CustomActivity(name="wait, im coded ( ͡° ͜ʖ ͡°)", emoji="🤖"))
     
     print(f"{bot.user.name}, is ready to chud it out")
 
