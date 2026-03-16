@@ -33,7 +33,7 @@ async def on_ready():
         with open('data.json', 'w') as f:
             json.dump(data, f, indent=4)
 
-    bot.status = "test"
+    bot.status.name = "testing twin"
     
     print(f"{bot.user.name}, is ready to chud it out")
 
