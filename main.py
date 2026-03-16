@@ -210,6 +210,11 @@ async def checkMedal():
         
         responseData = response.json()
 
+        print(f"Checking {username}: {responseData}")
+
+        if not responseData['contentObjects']:
+            continue
+
         if data['registered_users'][username][1] != responseData['contentObjects'][0]['contentId']:
             data['registered_users'][username][1] = responseData['contentObjects'][0]['contentId']
 
