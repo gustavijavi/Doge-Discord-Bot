@@ -7,8 +7,7 @@ import asyncio
 import json
 import requests
 from medal_api import MedalAPI
-
-medalApi = MedalAPI()
+from discord.ext import commands, tasks
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -22,6 +21,10 @@ bot = commands.Bot(command_prefix='d!', intents=intents)
 
 # set up your own user id in the env file in case you want the bot to @ you specifically at certain points
 my_user_id = int(os.getenv('USER_ID'))
+
+medal_api_key = os.getenv('MEDAL_API_KEY')
+
+medalApi = MedalAPI()
 
 
 @bot.event
@@ -38,6 +41,8 @@ async def on_ready():
             json.dump(data, f, indent=4)
 
     await bot.change_presence(activity=discord.CustomActivity(name="wait, im coded ( ͡° ͜ʖ ͡°)"))
+
+    checkMedal()
     
     print(f"{bot.user.name}, is ready to chud it out")
 
@@ -191,6 +196,32 @@ async def unregister(ctx, *, msg):
 
     await ctx.send(f"{msg} has been unregistered twin")
 
+
+@tasks.loop(seconds=10.0)
+async def checkMedal():
+    
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    for username in data['registered_users']:
+        
+        response = requests.get(f"https://developers.medal.tv/v1/latest?userId={data['registered_users'][username][0]}&limit=1",
+                                headers={"Authorization": medal_api_key})
+        
+        responseData = response.json()
+
+        if data['registered_users'][username][1] != responseData['contentObjects'][0]['contentId']:
+            data['registered_users'][username][1] = responseData['contentObjects'][0]['contentId']
+
+            for serverId in data['registered_clip_channels']:
+                for channelId in data['registered_clip_channels'][serverId]:
+
+                    channel = bot.get_channel(int(channelId))
+
+                    await channel.send(f"{username} just posted a new clip\n{responseData['contentObjects'][0]['directClipUrl']}")
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 '''
