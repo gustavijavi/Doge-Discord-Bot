@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 import os
 import asyncio
 import json
+import requests
+from medal_api import MedalAPI
+
+medalApi = MedalAPI()
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -145,6 +149,32 @@ async def unregisterClips(ctx):
     await unregisterChannel(ctx, 'registered_clip_channels')
     
     await ctx.send(f"Unregistered this channel for sending clips")
+
+
+@bot.command()
+async def register(ctx, *, msg):
+    userID = medalApi.get_user(msg)
+
+    if userID == []:
+        ctx.send(f"Username not found on Medal")
+        return
+    
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    if msg in data['registered_users']:
+        ctx.send(f"This username has already been registered")
+        return
+    
+    data['registered_users'][msg] = []
+
+    data['registered_users'][msg].append(userID)
+    data['registered_users'][msg].append("")
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+
+
 
 '''
 @bot.command()
