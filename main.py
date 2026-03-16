@@ -132,9 +132,6 @@ async def registerClips(ctx):
     if await notInServer(ctx):
         return
 
-    with open('data.json', 'r') as f:
-        data = json.load(f)
-
     await registerChannel(ctx, 'registered_clip_channels')
     
     await ctx.send(f"Registered this channel for sending clips")
@@ -153,22 +150,24 @@ async def unregisterClips(ctx):
 
 @bot.command()
 async def register(ctx, *, msg):
-    userID = medalApi.get_user(msg)
+    user = medalApi.get_user(msg)
 
-    if userID == []:
-        ctx.send(f"Username not found on Medal")
+    if user == []:
+        await ctx.send(f"Username not found on Medal")
         return
     
+    userId = user['userId']
+
     with open('data.json', 'r') as f:
         data = json.load(f)
 
     if msg in data['registered_users']:
-        ctx.send(f"This username has already been registered")
+        await ctx.send(f"This username has already been registered")
         return
     
     data['registered_users'][msg] = []
 
-    data['registered_users'][msg].append(userID)
+    data['registered_users'][msg].append(userId)
     data['registered_users'][msg].append("")
 
     with open('data.json', 'w') as f:
