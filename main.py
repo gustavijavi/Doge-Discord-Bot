@@ -32,6 +32,8 @@ async def on_ready():
         
         with open('data.json', 'w') as f:
             json.dump(data, f, indent=4)
+
+    bot.status = "test"
     
     print(f"{bot.user.name}, is ready to chud it out")
 
@@ -144,37 +146,36 @@ async def unregisterClips(ctx):
     
     await ctx.send(f"Unregistered this channel for sending clips")
 
-
-@bot.command()
-#@commands.has_role(secret_role)
-async def secret(ctx):
-    # await ctx.send("You have the secret role woahg")
-    
-    return
-
-# @secret.error
-async def secret_error(ctx, error):
-    # if isinstance(error, commands.MissingRole):
-    #     await ctx.send("You don't have permission for dat twin")
-    
-    return
-
-
 '''
+@bot.command()
+@commands.has_role(secret_role)
+async def secret(ctx):
+    await ctx.send("You have the secret role woahg")
+    
+    return
+
+@secret.error
+async def secret_error(ctx, error):
+    if isinstance(error, commands.MissingRole):
+        await ctx.send("You don't have permission for dat twin")
+    
+    return
+
+
 @bot.command()
 async def dm(ctx, *, msg):
     await ctx.author.send(f"you wanted me to send you: {msg}")
-'''
 
 
-'''
+
+
 @bot.command()
 async def reply(ctx):
     await ctx.reply("this is a reply twin")
-'''
 
 
-'''
+
+
 @bot.command()
 async def poll(ctx, *, question):
     embed = discord.Embed(title="New Poll", description=question)
@@ -187,6 +188,7 @@ async def poll(ctx, *, question):
 
 
 # Helper Functions
+
 async def notInServer(ctx):
     if ctx.guild is None:
         await ctx.send("This command can only be used in a server")
