@@ -12,6 +12,8 @@ load_dotenv()
 # Stored in the .env file
 WEBHOOK_SECRET = os.getenv('WEBHOOK_SECRET', '')
 
+filePath = os.getenv('FILE_PATH', '')
+
 # class inherited from BaseHTTPRequestHandler from the import
 class WebhookHandler(BaseHTTPRequestHandler):
 
@@ -42,10 +44,10 @@ class WebhookHandler(BaseHTTPRequestHandler):
 		print("Valid webhook received, updating...")
 
 		# pulls the updated repository from GitHub to update bot
-		subprocess.run(["git", "pull"], cwd="/home/pi/Doge-Discord-Bot")
+		subprocess.run(["git", "pull"], cwd=filePath)
 
 		# restarts the bot using the 'restart_bot.sh' file
-		subprocess.run(["bash", "/home/pi/Doge-Discord-Bot/restart_bot.sh"])
+		subprocess.run(["bash", f"{filePath}restart_bot.sh"])
 
 		# sends response code and message basically saying everything went well
 		self.send_response(200)
