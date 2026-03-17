@@ -105,7 +105,7 @@ async def on_message(message):
 # regular ping command just to test bot
 @bot.command()
 async def ping(ctx):
-    await ctx.send("pong :)")
+    await ctx.send("pong")
 
 
 # command to register channel for the messaging_override.py script
