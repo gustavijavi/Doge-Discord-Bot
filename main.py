@@ -221,7 +221,7 @@ async def checkMedal():
 
                     channel = bot.get_channel(int(channelId))
 
-                    await channel.send(f"{username} just posted a new clip\n\n{responseData['contentObjects'][0]['directClipUrl']}")
+                    await channel.send(f"## {username} just posted a new clip\n{responseData['contentObjects'][0]['directClipUrl']}")
 
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4)
