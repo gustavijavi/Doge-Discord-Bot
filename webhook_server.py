@@ -47,7 +47,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
 		subprocess.run(["git", "pull"], cwd=filePath)
 
 		# restarts the bot using the 'restart_bot.sh' file
-		subprocess.run(["bash", f"{filePath}restart_bot.sh"])
+		subprocess.run(["bash", f"{filePath}/restart_bot.sh"])
 
 		# sends response code and message basically saying everything went well
 		self.send_response(200)
