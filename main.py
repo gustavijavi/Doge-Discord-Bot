@@ -112,20 +112,30 @@ async def ping(ctx):
 
 
 @bot.command()
-async def getLeagueStats(ctx):
+async def getLeagueStats(ctx, *, riotName):
     channel = ctx.channel
 
-    await channel.send("Please input your Riot username with ID (ex. John#NA1)")
+    poundIndex = riotName.find("#")
 
-    def check(m):
-        return m.content.find("#") != -1
+    if poundIndex == -1 or poundIndex == riotName.length() - 1:
+        await channel.send("Not a valid name, try again")
+        return
+
+    name = riotName[0, poundIndex]
+    tagLine = riotName[poundIndex + 1, riotName.length()]
+
+    response = requests.get(f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagLine}", 
+                            headers={"Authorization": riot_api_key})
     
-    try:
-        msg = await bot.wait_for('message', timeout=5.0, check=check)
-    except asyncio.TimeoutError:
-        await channel.send("you took too long vro")
-    else:
-        await channel.send("you didn't take too long vro!!!")
+    responseCode = response.status_code
+
+    if responseCode != 200:
+        await channel.send("Invalid Riot name twin")
+
+    responseData = response.json
+
+    channel.send(responseData["puuid"])
+
 
 
 
