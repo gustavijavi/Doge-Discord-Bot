@@ -124,10 +124,9 @@ async def getLeagueStats(ctx, *, riotName):
     name = riotName[0:poundIndex]
     tagLine = riotName[poundIndex + 1:len(riotName)]
 
-    response = requests.get(f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagLine}",
-                                headers={"X-Riot-Token": riot_api_key})
+    response = requests.get(f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagLine}?api_key={riot_api_key}")
     
-    responseCode = response
+    responseCode = response.status_code
 
     responseData = response.headers
 
