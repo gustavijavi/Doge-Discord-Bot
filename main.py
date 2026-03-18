@@ -128,7 +128,7 @@ async def getLeagueStats(ctx, *, riotName):
     
     responseCode = response.status_code
 
-    responseData = response.json
+    responseData = response.json()
 
     if responseCode != 200:
         await channel.send("Invalid Riot name twin")
