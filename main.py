@@ -133,7 +133,7 @@ async def getLeagueStats(ctx, *, riotName):
 
     responseData = response.json
 
-    channel.send(responseData)
+    await channel.send(responseData)
 
 
 
