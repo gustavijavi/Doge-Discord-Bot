@@ -127,12 +127,14 @@ async def getLeagueStats(ctx, *, riotName):
     response = requests.get(f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagLine}",
                                 headers={"X-Riot-Token": riot_api_key})
     
-    responseCode = response.status_code
+    responseCode = response
+
+    responseData = response.headers.json
 
     if responseCode != 200:
         await channel.send("Invalid Riot name twin")
 
-    await channel.send(response)
+    await channel.send(responseData)
 
 
 
