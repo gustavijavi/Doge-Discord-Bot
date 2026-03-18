@@ -121,8 +121,8 @@ async def getLeagueStats(ctx, *, riotName):
         await channel.send("Not a valid name, try again")
         return
 
-    name = riotName[0, poundIndex]
-    tagLine = riotName[poundIndex + 1, len(riotName)]
+    name = riotName[0:poundIndex]
+    tagLine = riotName[poundIndex + 1:len(riotName)]
 
     response = requests.get(f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagLine}", 
                             headers={"Authorization": riot_api_key})
