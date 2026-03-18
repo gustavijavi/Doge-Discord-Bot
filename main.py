@@ -32,6 +32,9 @@ my_user_id = int(os.getenv('USER_ID'))
 # set up medal API key so that it may grab links or anything of the sort for clips uploaded to medal
 medal_api_key = os.getenv('MEDAL_API_KEY')
 
+# set up riot API key so it can be called for league data
+riot_api_key = os.getenv('RIOT_API_KEY')
+
 # intializes medal api through another github repo to get the user ID
 medalApi = MedalAPI()
 
@@ -106,6 +109,25 @@ async def on_message(message):
 @bot.command()
 async def ping(ctx):
     await ctx.send("pong")
+
+
+@bot.command()
+async def getLeagueStats(ctx):
+    channel = ctx.channel
+
+    await channel.send("Please input your Riot username with ID (ex. John#NA1)")
+
+    def check(m):
+        return m.content.find("#") != -1
+    
+    try:
+        msg = await bot.wait_for('message', timeout=5.0, check=check)
+    except asyncio.TimeoutError:
+        await channel.send("you took too long vro")
+    else:
+        await channel.send("you didn't take too long vro!!!")
+
+
 
 
 # command to register channel for the messaging_override.py script
