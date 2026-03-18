@@ -263,7 +263,7 @@ async def checkMedal():
                     
                     channel = bot.get_channel(int(channelId))
 
-                    await channel.send(f"# {username} just posted a new [clip]({responseData['contentObjects'][0]['directClipUrl']})")
+                    await channel.send(f"### {username} just posted a new [clip]({responseData['contentObjects'][0]['directClipUrl']})")
     
     # writes the new contentIDs to the data.json file
     with open('data.json', 'w') as f:
