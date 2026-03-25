@@ -64,6 +64,20 @@ async def on_ready():
     print(f"{bot.user.name}, is ready to chud it out")
 
 
+# logs with bot has any changes with Discord's web socket
+@bot.event
+async def on_disconnect():
+    print("Bot disconnected from Discord")
+
+@bot.event
+async def on_resumed():
+    print("Bot reconnected to Discord")
+
+@bot.event
+async def on_connect():
+    print("Bot connected to Discord")
+
+
 # on member join, make the bot do something
 @bot.event
 async def on_member_join(member):
