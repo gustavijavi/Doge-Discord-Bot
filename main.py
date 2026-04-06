@@ -8,6 +8,8 @@ import json # allows you to read and write to json files
 import requests # allows you to send requests to links to receive data
 from medal_api import MedalAPI # medal API functions grabbed from other repository since they're smarter than me :(
 from discord.ext import commands, tasks # command that allows looping every set amount of time within the bot
+from datetime import datetime # allows getting the date
+import aiohttp # better http requests for api
 
 # loads the .env file
 load_dotenv()
@@ -67,15 +69,15 @@ async def on_ready():
 # logs with bot has any changes with Discord's web socket
 @bot.event
 async def on_disconnect():
-    print("Bot disconnected from Discord")
+    print(f"[{datetime.now()}] Bot disconnected from Discord")
 
 @bot.event
 async def on_resumed():
-    print("Bot reconnected to Discord")
+    print(f"[{datetime.now()}] Bot reconnected to Discord")
 
 @bot.event
 async def on_connect():
-    print("Bot connected to Discord")
+    print(f"[{datetime.now()}] Bot connected to Discord")
 
 
 # on member join, make the bot do something
@@ -281,34 +283,33 @@ async def checkMedal():
     # reads data.json
     with open('data.json', 'r') as f:
         data = json.load(f)
-
-    # loop through each username in 'registered_users' dict
-    for username in data['registered_users']:
         
-        # uses the request function to grab data sent back from requesting the link given
+        # uses the aiohttp function to grab data sent back from requesting the link given
         # gets all sorts of data for the latest video sent by the 'registered_user' on medal
-        response = requests.get(f"https://developers.medal.tv/v1/latest?userId={data['registered_users'][username][0]}&limit=1",
-                                headers={"Authorization": medal_api_key})
+    async with aiohttp.ClientSession() as session:
         
-        # sets the response to a json so that you can read the data in python
-        responseData = response.json()
+        # loop through each username in 'registered_users' dict
+        for username in data['registered_users']:
+            
+            async with session.get(f"https://developers.medal.tv/v1/latest?userId={data['registered_users'][username][0]}&limit=1",
+                                   headers={"Authorization": medal_api_key}) as response:
+                responseData = await response.json()
 
-        # if 'contentObjects' dict is empty, theres no videos to even grab from medal profile so we skip to the next user
-        if not responseData['contentObjects']:
-            continue
+            # if 'contentObjects' dict is empty, theres no videos to even grab from medal profile so we skip to the next user
+            if not responseData['contentObjects']:
+                continue
 
-        # if the contentID that was stored within the 'registered_users' username array does not equal the new one grabbed from the medal
-        # API, then set them equal to each other
-        if data['registered_users'][username][1] != responseData['contentObjects'][0]['contentId']:
-            data['registered_users'][username][1] = responseData['contentObjects'][0]['contentId']
+            # if the contentID that was stored within the 'registered_users' username array does not equal the new one grabbed from the medal
+            # API, then set them equal to each other
+            if data['registered_users'][username][1] != responseData['contentObjects'][0]['contentId']:
+                data['registered_users'][username][1] = responseData['contentObjects'][0]['contentId']
 
-            # goes through each server and channel within each server to send the clips into
-            for serverId in data['registered_clip_channels']:
-                for channelId in data['registered_clip_channels'][serverId]:
+                # goes through each server and channel within each server to send the clips into
+                for serverId in data['registered_clip_channels']:
+                    for channelId in data['registered_clip_channels'][serverId]:
                     
-                    channel = bot.get_channel(int(channelId))
-
-                    await channel.send(f"### {username} just posted a new [clip]({responseData['contentObjects'][0]['directClipUrl']})")
+                        channel = bot.get_channel(int(channelId))
+                        await channel.send(f"### {username} just posted a new [clip]({responseData['contentObjects'][0]['directClipUrl']})")
     
     # writes the new contentIDs to the data.json file
     with open('data.json', 'w') as f:
