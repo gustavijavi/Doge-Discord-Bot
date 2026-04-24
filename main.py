@@ -236,17 +236,17 @@ async def registerMedal(ctx, *, msg):
         data = json.load(f)
 
     # checks to see if the user has already been registered
-    if msg in data['registered_users_medal']:
+    if msg in data['registered_medal_users']:
         await ctx.send(f"This Medal user has already been registered blud")
         return
     
     # sets up the username as a dict key with an array as its value
-    data['registered_users_medal'][msg] = []
+    data['registered_medal_users'][msg] = []
 
     # appends the user ID and an empty string to the username key array for the last video contentID posted by the user on medal
     # set default to "" so that it may immediately start grabbing the latest video once the user has been registered
-    data['registered_users_medal'][msg].append(userId)
-    data['registered_users_medal'][msg].append("")
+    data['registered_medal_users'][msg].append(userId)
+    data['registered_medal_users'][msg].append("")
 
     # writes the new data of the user to the data.json file for saving
     with open('data.json', 'w') as f:
@@ -263,12 +263,12 @@ async def unregisterMedal(ctx, *, msg):
         data = json.load(f)
 
     # checks if the username inputted by the message author is in the register_users dict
-    if msg not in data['registered_users_medal']:
+    if msg not in data['registered_medal_users']:
         await ctx.send(f"Medal user has not been registered yet blud")
         return
     
     # deletes user data from data.json
-    del data['registered_users_medal'][msg]
+    del data['registered_medal_users'][msg]
 
     # writes the new data, without the user that was just deleted, to the data.json file for saving
     with open('data.json', 'w') as f:
@@ -289,10 +289,10 @@ async def checkMedal():
         # gets all sorts of data for the latest video sent by the 'registered_user' on medal
     async with aiohttp.ClientSession() as session:
         
-        # loop through each username in 'registered_users_medal' dict
-        for username in data['registered_users_medal']:
+        # loop through each username in 'registered_medal_users' dict
+        for username in data['registered_medal_users']:
             
-            async with session.get(f"https://developers.medal.tv/v1/latest?userId={data['registered_users_medal'][username][0]}&limit=1",
+            async with session.get(f"https://developers.medal.tv/v1/latest?userId={data['registered_medal_users'][username][0]}&limit=1",
                                    headers={"Authorization": medal_api_key}) as response:
                 responseData = await response.json()
 
@@ -300,10 +300,10 @@ async def checkMedal():
             if not responseData['contentObjects']:
                 continue
 
-            # if the contentID that was stored within the 'registered_users_medal' username array does not equal the new one grabbed from the medal
+            # if the contentID that was stored within the 'registered_medal_users' username array does not equal the new one grabbed from the medal
             # API, then set them equal to each other
-            if data['registered_users_medal'][username][1] != responseData['contentObjects'][0]['contentId']:
-                data['registered_users_medal'][username][1] = responseData['contentObjects'][0]['contentId']
+            if data['registered_medal_users'][username][1] != responseData['contentObjects'][0]['contentId']:
+                data['registered_medal_users'][username][1] = responseData['contentObjects'][0]['contentId']
 
                 # goes through each server and channel within each server to send the clips into
                 for serverId in data['registered_clip_channels']:
