@@ -220,6 +220,8 @@ async def unregisterClips(ctx):
 @bot.command()
 async def registerMedal(ctx, *, msg):
     
+    ctx.send(f"Medal response: {user}")
+
     # calls on the medal API set at the beginning to get the medal user data from the message inputted by the message author
     user = medalApi.get_user(msg)
 
