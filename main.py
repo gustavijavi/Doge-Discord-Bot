@@ -8,8 +8,9 @@ import json # allows you to read and write to json files
 import requests # allows you to send requests to links to receive data
 from medal_api import MedalAPI # medal API functions grabbed from other repository since they're smarter than me :(
 from discord.ext import commands, tasks # command that allows looping every set amount of time within the bot
-from datetime import datetime # allows getting the date
+from datetime import time, timezone, timedelta, datetime # allows getting the date
 import aiohttp # better http requests for api
+import random
 
 # loads the .env file
 load_dotenv()
@@ -51,7 +52,7 @@ async def on_ready():
             "registered_clip_channels": {},
             "registered_medal_users": {},
             "registered_league_users": {},
-            "themes": {},
+            "art_theme_channel": {},
             "settings": {}
         }
         
@@ -63,6 +64,8 @@ async def on_ready():
 
     # starts the loop to check for medal clips using the function defined below called checkMedal()
     checkMedal.start()
+
+    dailyArtTheme.start()
     
     # once all done, bot says it's ready
     print(f"{bot.user.name}, is ready to chud it out")
@@ -286,8 +289,8 @@ async def checkMedal():
     with open('data.json', 'r') as f:
         data = json.load(f)
         
-        # uses the aiohttp function to grab data sent back from requesting the link given
-        # gets all sorts of data for the latest video sent by the 'registered_user' on medal
+    # uses the aiohttp function to grab data sent back from requesting the link given
+    # gets all sorts of data for the latest video sent by the 'registered_user' on medal
     async with aiohttp.ClientSession() as session:
         
         # loop through each username in 'registered_medal_users' dict
@@ -317,8 +320,55 @@ async def checkMedal():
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4)
 
+@bot.command()
+async def setArtChannel(ctx):
+
+    # calls on function to check if the command is being sent from a server, if not it returns false
+    if await notInServer(ctx):
+        return
+    
+    await registerChannel(ctx, 'art_theme_channel')
+    
+    await ctx.send(f"Registered this channel for art themes")
+
+eastern = timezone(timedelta(hours=-4))
+daily_time = time(hour=8, minute=0, tzinfo=eastern)
+
+@tasks.loop(time=daily_time)
+async def dailyArtTheme():
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    if 'used_art_themes' not in data:
+        data['used_art_themes'] = []
+    if 'art_theme_channel' not in data:
+        return
+    
+    art_themes = load_themes()
+
+    available = [t for t in art_themes if t not in data['used_art_themes']]
+    if not available:
+        data['used_art_themes'] = []
+        available = art_themes.copy()
+
+    theme = random.choice(available)
+    data['used_art_themes'].append(theme)
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+
+    for serverId in data['art_theme_channel']:
+        for channelId in data['art_theme_channel'][serverId]:
+            channel = bot.get_channel(int(channelId))
+            if channel:
+                await channel.send(f"# 🎨 Today's Art Theme\n## {theme}\nGet creative and share what you make!")
+
 
 # -- Helper Functions --
+
+def load_themes():
+    with open('art_themes.txt', 'r') as f:
+        return [line.strip() for line in f.readlines() if line.strip()]
 
 # checks if the guild is None, meaning the command was not sent in server. Sends True if so
 async def notInServer(ctx):
