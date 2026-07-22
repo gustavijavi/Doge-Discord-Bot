@@ -51,6 +51,7 @@ async def on_ready():
             "registered_clip_channels": {},
             "registered_medal_users": {},
             "registered_league_users": {},
+            "themes": {},
             "settings": {}
         }
         
@@ -315,6 +316,12 @@ async def checkMedal():
     # writes the new contentIDs to the data.json file
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4)
+
+@tasks.loop(time=datetime.time(17, 46, 0))
+async def test():
+    channelId = 1482420365731823800
+    channel = bot.get_channel(channelId)
+    await channel.send(f"test")
 
 
 # -- Helper Functions --
