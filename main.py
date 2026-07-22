@@ -317,7 +317,7 @@ async def checkMedal():
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4)
 
-@tasks.loop(time=datetime.time(17, 46, 0))
+@tasks.loop(time=datetime.time(17, 50, 0))
 async def test():
     channelId = 1482420365731823800
     channel = bot.get_channel(channelId)
