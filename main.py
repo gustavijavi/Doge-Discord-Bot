@@ -361,7 +361,7 @@ async def dailyArtTheme():
         for channelId in data['art_theme_channel'][serverId]:
             channel = bot.get_channel(int(channelId))
             if channel:
-                await channel.send(f"# 🎨 Today's Art Theme\n## {theme}\n<@&1529569077079576817>, Get creative and share what you make!")
+                await channel.send(f"# 🎨 Today's Art Theme\n## >>> {theme}\n<@&1529569077079576817>, Get creative and share what you make!")
 
 
 # -- Helper Functions --
